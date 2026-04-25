@@ -89,23 +89,27 @@ const FeelingForm = () => {
         <label className={styles.formLabel}>
           What color speaks to you the most?
         </label>
-        {colors.map((color, index) => (
-          <label key={index} className={styles.colorOption}>
-            <input
-              type="radio"
-              name="color"
-              value={color.hex}
-              checked={selectedColor === color.hex}
-              onChange={handleColorChange}
-              className={styles.colorRadio}
-            />
-            <span
-              className={styles.colorSwatch}
-              style={{ backgroundColor: color.hex }}
-            ></span>
-            {color.name}
-          </label>
-        ))}
+        <div className={styles.feelingGroup}>
+          {colors.map((color, index) => (
+            <label key={index} className={classnames(styles.colorOption, {
+              [styles.colorOptionSelected]: selectedColor === color.hex
+            })}>
+              <input
+                type="radio"
+                name="color"
+                value={color.hex}
+                checked={selectedColor === color.hex}
+                onChange={handleColorChange}
+                className={styles.colorRadio}
+              />
+              <span
+                className={styles.colorSwatch}
+                style={{ backgroundColor: color.hex }}
+              ></span>
+              {color.name}
+            </label>
+          ))}
+        </div>
       </div>
 
       <div className={styles.formGroup}>

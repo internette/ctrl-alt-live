@@ -42,13 +42,42 @@ $quarter-spacing: 0.25rem;
   @include form-field;
 }
 
+.feelingGroup {
+    display: inline-flex;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
 .colorOption {
-  display: block;
+  display: flex;
   margin-bottom: $quarter-spacing;
+  cursor: pointer;
+  padding: $quarter-spacing;
+  border-radius: $border-radius;
+  transition: background-color 0.2s;
+  width: 8rem;
+  text-align: left;
+  align-items: center;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+
+  &.colorOptionSelected {
+    background-color: rgba(0, 123, 255, 0.1);
+    border: 2px solid $primary-color;
+  }
 }
 
 .colorRadio {
   margin-right: $half-spacing;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  position: absolute;
 }
 
 .colorSwatch {
@@ -56,8 +85,10 @@ $quarter-spacing: 0.25rem;
   width: 20px;
   height: 20px;
   border: 1px solid #000;
+  border-radius: 5px;
   margin-right: $half-spacing;
   vertical-align: middle;
+  box-shadow: inset 0 0 0 1px rgba(white, 0.5);
 }
 
 .formTextarea {
