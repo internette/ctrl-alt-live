@@ -1,10 +1,33 @@
 import { useState, FormEvent, ChangeEvent } from 'react';
+import OpenAI from "openai";
 import classnames from 'classnames';
 import styles from './FeelingForm.module.scss';
 
 interface NamedColor {
   name: string;
   hex: string;
+}
+
+interface FormData {
+  feeling: string;
+  selectedColorName: string;
+  selectedColorHex: string;
+  favoritePlace: string;
+}
+
+const openai = new OpenAI({
+  apiKey: import.meta.env.VITE_OPENAI_API_KEY
+});
+
+async function generateMonster({ formData }: { formData: FormData }) {
+  const completion = await openai.chat.completions.create({
+    model: "gpt-3.5-turbo",
+    messages: [
+      { role: "user", content: `With the following information, generate a cute monster as an SVG and includes ${formData.selectedColorHex}: Feeling: ${formData.feeling}, Color: ${formData.selectedColorName} (${formData.selectedColorHex}), Favorite Place: ${formData.favoritePlace}` },
+    ],
+  });
+
+  console.log(completion.choices[0].message.content);
 }
 
 const FeelingForm = () => {
@@ -49,6 +72,13 @@ const FeelingForm = () => {
     e.preventDefault();
     if (isFormValid) {
       const selectedColorData = colors.find(color => color.hex === selectedColor);
+      const formData = { 
+        feeling, 
+        selectedColorName: selectedColorData?.name || selectedColor,
+        selectedColorHex: selectedColorData?.hex || selectedColor,
+        favoritePlace 
+      };
+
       console.log('Form submitted:', { 
         feeling, 
         selectedColor: selectedColorData ? `${selectedColorData.name} (${selectedColorData.hex})` : selectedColor,
