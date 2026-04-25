@@ -1,4 +1,4 @@
-import FeelingForm from './components/form/FeelingForm'
+import FeelingForm from './components/form/FeelingForm.tsx'
 import './App.css'
 
 function App() {

@@ -1,20 +1,32 @@
-import { useState } from 'react';
+import { useState, FormEvent, ChangeEvent } from 'react';
 
 const FeelingForm = () => {
-  const [feeling, setFeeling] = useState('');
-  const [selectedColor, setSelectedColor] = useState('');
-  const [favoritePlace, setFavoritePlace] = useState('');
+  const [feeling, setFeeling] = useState<string>('');
+  const [selectedColor, setSelectedColor] = useState<string>('');
+  const [favoritePlace, setFavoritePlace] = useState<string>('');
 
   // Generate 10 random colors
-  const colors = Array.from({ length: 10 }, () => {
+  const colors: string[] = Array.from({ length: 10 }, () => {
     const randomColor = Math.floor(Math.random() * 16777215).toString(16);
     return `#${randomColor.padStart(6, '0')}`;
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log('Form submitted:', { feeling, selectedColor, favoritePlace });
     // Handle form submission here
+  };
+
+  const handleFeelingChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setFeeling(e.target.value);
+  };
+
+  const handleColorChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setSelectedColor(e.target.value);
+  };
+
+  const handlePlaceChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    setFavoritePlace(e.target.value);
   };
 
   return (
@@ -27,7 +39,7 @@ const FeelingForm = () => {
           type="text"
           id="feeling"
           value={feeling}
-          onChange={(e) => setFeeling(e.target.value)}
+          onChange={handleFeelingChange}
           style={{ width: '100%', padding: '0.5rem', border: '1px solid #ccc', borderRadius: '4px' }}
         />
       </div>
@@ -43,7 +55,7 @@ const FeelingForm = () => {
               name="color"
               value={color}
               checked={selectedColor === color}
-              onChange={(e) => setSelectedColor(e.target.value)}
+              onChange={handleColorChange}
               style={{ marginRight: '0.5rem' }}
             />
             <span
@@ -69,7 +81,7 @@ const FeelingForm = () => {
         <textarea
           id="favoritePlace"
           value={favoritePlace}
-          onChange={(e) => setFavoritePlace(e.target.value)}
+          onChange={handlePlaceChange}
           rows="3"
           style={{ width: '100%', padding: '0.5rem', border: '1px solid #ccc', borderRadius: '4px' }}
         />
