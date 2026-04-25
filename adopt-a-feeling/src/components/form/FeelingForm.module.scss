@@ -1,0 +1,91 @@
+// Variables
+$primary-color: #007bff;
+$primary-hover: #0056b3;
+$disabled-color: #ccc;
+$border-color: #ccc;
+$border-radius: 4px;
+$spacing-unit: 1rem;
+$half-spacing: 0.5rem;
+$quarter-spacing: 0.25rem;
+
+// Mixins
+@mixin form-field {
+  width: 100%;
+  padding: $half-spacing;
+  border: 1px solid $border-color;
+  border-radius: $border-radius;
+}
+
+@mixin button-base {
+  padding: $half-spacing $spacing-unit;
+  border: none;
+  border-radius: $border-radius;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.feelingForm {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.formGroup {
+  margin-bottom: $spacing-unit;
+}
+
+.formLabel {
+  display: block;
+  margin-bottom: $half-spacing;
+}
+
+.formInput {
+  @include form-field;
+}
+
+.colorOption {
+  display: block;
+  margin-bottom: $quarter-spacing;
+}
+
+.colorRadio {
+  margin-right: $half-spacing;
+}
+
+.colorSwatch {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 1px solid #000;
+  margin-right: $half-spacing;
+  vertical-align: middle;
+}
+
+.formTextarea {
+  @include form-field;
+  resize: vertical;
+}
+
+.submitButton {
+  @include button-base;
+  background-color: $primary-color;
+  color: white;
+
+  &:hover {
+    background-color: $primary-hover;
+  }
+
+  &:focus {
+    outline: 2px solid $primary-color;
+    outline-offset: 2px;
+  }
+
+  &.submitButtonDisabled,
+  &[disabled] {
+    background-color: $disabled-color;
+    cursor: not-allowed;
+
+    &:hover {
+      background-color: $disabled-color;
+    }
+  }
+}

@@ -1,20 +1,61 @@
 import { useState, FormEvent, ChangeEvent } from 'react';
+import classnames from 'classnames';
+import styles from './FeelingForm.module.scss';
+
+interface NamedColor {
+  name: string;
+  hex: string;
+}
 
 const FeelingForm = () => {
   const [feeling, setFeeling] = useState<string>('');
   const [selectedColor, setSelectedColor] = useState<string>('');
   const [favoritePlace, setFavoritePlace] = useState<string>('');
 
-  // Generate 10 random colors
-  const colors: string[] = Array.from({ length: 10 }, () => {
-    const randomColor = Math.floor(Math.random() * 16777215).toString(16);
-    return `#${randomColor.padStart(6, '0')}`;
-  });
+  // Predefined colors with emotional/feeling associations - mix of bold and bright
+  const colorPalette: NamedColor[] = [
+    { name: "Ocean Blue", hex: "#1e40af" },
+    { name: "Sunset Orange", hex: "#ea580c" },
+    { name: "Forest Green", hex: "#15803d" },
+    { name: "Rose Pink", hex: "#be185d" },
+    { name: "Golden Yellow", hex: "#ca8a04" },
+    { name: "Lavender Purple", hex: "#7c3aed" },
+    { name: "Coral Red", hex: "#dc2626" },
+    { name: "Mint Green", hex: "#059669" },
+    { name: "Sky Blue", hex: "#0284c7" },
+    { name: "Warm Peach", hex: "#ea580c" },
+    { name: "Deep Purple", hex: "#8b5cf6" },
+    { name: "Emerald Green", hex: "#06b6d4" },
+    { name: "Crimson Red", hex: "#dc2626" },
+    { name: "Amber Gold", hex: "#f59e0b" },
+    { name: "Indigo Blue", hex: "#6366f1" },
+    { name: "Teal Blue", hex: "#14b8a6" },
+    { name: "Magenta Pink", hex: "#ec4899" },
+    { name: "Olive Green", hex: "#84cc16" },
+    { name: "Royal Blue", hex: "#3b82f6" },
+    { name: "Burnt Orange", hex: "#f97316" }
+  ];
+
+  // Generate 10 random colors with names
+  const colors: NamedColor[] = [];
+  const shuffledPalette = [...colorPalette].sort(() => Math.random() - 0.5);
+  for (let i = 0; i < 10 && i < shuffledPalette.length; i++) {
+    colors.push(shuffledPalette[i]);
+  }
+
+  const isFormValid = feeling.trim() && selectedColor && favoritePlace.trim();
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('Form submitted:', { feeling, selectedColor, favoritePlace });
-    // Handle form submission here
+    if (isFormValid) {
+      const selectedColorData = colors.find(color => color.hex === selectedColor);
+      console.log('Form submitted:', { 
+        feeling, 
+        selectedColor: selectedColorData ? `${selectedColorData.name} (${selectedColorData.hex})` : selectedColor,
+        favoritePlace 
+      });
+      // Handle form submission here
+    }
   };
 
   const handleFeelingChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -30,9 +71,9 @@ const FeelingForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ maxWidth: '400px', margin: '0 auto' }}>
-      <div style={{ marginBottom: '1rem' }}>
-        <label htmlFor="feeling" style={{ display: 'block', marginBottom: '0.5rem' }}>
+    <form onSubmit={handleSubmit} className={styles.feelingForm}>
+      <div className={classnames(styles.formGroup)}>
+        <label htmlFor="feeling" className={styles.formLabel}>
           How are you feeling today?
         </label>
         <input
@@ -40,63 +81,52 @@ const FeelingForm = () => {
           id="feeling"
           value={feeling}
           onChange={handleFeelingChange}
-          style={{ width: '100%', padding: '0.5rem', border: '1px solid #ccc', borderRadius: '4px' }}
+          className={styles.formInput}
         />
       </div>
 
-      <div style={{ marginBottom: '1rem' }}>
-        <label style={{ display: 'block', marginBottom: '0.5rem' }}>
+      <div className={styles.formGroup}>
+        <label className={styles.formLabel}>
           What color speaks to you the most?
         </label>
         {colors.map((color, index) => (
-          <label key={index} style={{ display: 'block', marginBottom: '0.25rem' }}>
+          <label key={index} className={styles.colorOption}>
             <input
               type="radio"
               name="color"
-              value={color}
-              checked={selectedColor === color}
+              value={color.hex}
+              checked={selectedColor === color.hex}
               onChange={handleColorChange}
-              style={{ marginRight: '0.5rem' }}
+              className={styles.colorRadio}
             />
             <span
-              style={{
-                display: 'inline-block',
-                width: '20px',
-                height: '20px',
-                backgroundColor: color,
-                border: '1px solid #000',
-                marginRight: '0.5rem',
-                verticalAlign: 'middle'
-              }}
+              className={styles.colorSwatch}
+              style={{ backgroundColor: color.hex }}
             ></span>
-            {color}
+            {color.name}
           </label>
         ))}
       </div>
 
-      <div style={{ marginBottom: '1rem' }}>
-        <label htmlFor="favoritePlace" style={{ display: 'block', marginBottom: '0.5rem' }}>
+      <div className={styles.formGroup}>
+        <label htmlFor="favoritePlace" className={styles.formLabel}>
           Write a sentence about your favorite place.
         </label>
         <textarea
           id="favoritePlace"
           value={favoritePlace}
           onChange={handlePlaceChange}
-          rows="3"
-          style={{ width: '100%', padding: '0.5rem', border: '1px solid #ccc', borderRadius: '4px' }}
+          rows={3}
+          className={styles.formTextarea}
         />
       </div>
 
       <button
         type="submit"
-        style={{
-          padding: '0.5rem 1rem',
-          backgroundColor: '#007bff',
-          color: 'white',
-          border: 'none',
-          borderRadius: '4px',
-          cursor: 'pointer'
-        }}
+        className={classnames(styles.submitButton, {
+          [styles.submitButtonDisabled]: !isFormValid
+        })}
+        disabled={!isFormValid}
       >
         Submit
       </button>
