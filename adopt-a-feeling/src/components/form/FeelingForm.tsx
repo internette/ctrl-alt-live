@@ -49,23 +49,17 @@ const FeelingForm: React.FC<FeelingFormProps> = ({ setMonster }) => {
     { name: "Ocean Blue", hex: "#1e40af" },
     { name: "Sunset Orange", hex: "#ea580c" },
     { name: "Forest Green", hex: "#15803d" },
-    { name: "Rose Pink", hex: "#be185d" },
     { name: "Golden Yellow", hex: "#ca8a04" },
     { name: "Lavender Purple", hex: "#7c3aed" },
-    { name: "Coral Red", hex: "#dc2626" },
-    { name: "Mint Green", hex: "#059669" },
     { name: "Sky Blue", hex: "#0284c7" },
-    { name: "Warm Peach", hex: "#ea580c" },
-    { name: "Deep Purple", hex: "#8b5cf6" },
     { name: "Emerald Green", hex: "#06b6d4" },
     { name: "Crimson Red", hex: "#dc2626" },
-    { name: "Amber Gold", hex: "#f59e0b" },
-    { name: "Indigo Blue", hex: "#6366f1" },
-    { name: "Teal Blue", hex: "#14b8a6" },
-    { name: "Magenta Pink", hex: "#ec4899" },
     { name: "Olive Green", hex: "#84cc16" },
-    { name: "Royal Blue", hex: "#3b82f6" },
-    { name: "Burnt Orange", hex: "#f97316" }
+    { name: "Hot Pink", hex: "#ff69b4" },
+    { name: "Pale Yellow", hex: "#fde68a" },
+    { name: "Pastel Blue", hex: "#bfdbfe" },
+    { name: "Midnight Black", hex: "#000000" },
+    { name: "Pure White", hex: "#ffffff" }
   ];
 
   // Generate 10 random colors on component mount
