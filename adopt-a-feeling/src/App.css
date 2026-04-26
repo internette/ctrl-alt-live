@@ -9,6 +9,9 @@
   text-align: center;
   padding: 2rem;
 }
+main {
+  width: 80vw;
+}
 
 .logo {
   height: 6em;
