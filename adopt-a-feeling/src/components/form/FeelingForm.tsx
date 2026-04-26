@@ -1,4 +1,4 @@
-import { useState, FormEvent, ChangeEvent } from 'react';
+import { useState, useEffect, FormEvent, ChangeEvent } from 'react';
 import OpenAI from "openai";
 import classnames from 'classnames';
 import styles from './FeelingForm.module.scss';
@@ -15,25 +15,39 @@ interface FormData {
   favoritePlace: string;
 }
 
-const openai = new OpenAI({
-  apiKey: import.meta.env.VITE_OPENAI_API_KEY
-});
-
-async function generateMonster({ formData }: { formData: FormData }) {
-  const completion = await openai.chat.completions.create({
-    model: "gpt-3.5-turbo",
-    messages: [
-      { role: "user", content: `With the following information, generate a cute monster as an SVG and includes ${formData.selectedColorHex}: Feeling: ${formData.feeling}, Color: ${formData.selectedColorName} (${formData.selectedColorHex}), Favorite Place: ${formData.favoritePlace}` },
-    ],
-  });
-
-  console.log(completion.choices[0].message.content);
+interface FeelingFormProps {
+  setMonster: (monster: string) => void;
 }
 
-const FeelingForm = () => {
+const openai = new OpenAI({
+  apiKey: import.meta.env.VITE_OPENAI_API_KEY,
+  dangerouslyAllowBrowser: true
+});
+
+async function generateMonster({ formData }: { formData: FormData }): Promise<string> {
+  // const completion = await openai.chat.completions.create({
+  //   model: "gpt-3.5-turbo",
+  //   messages: [
+  //     { role: "user", content: `Generate a cute monster inspired by the following information and includes ${formData.selectedColorHex} in the color scheme: Feeling: ${formData.feeling}, Color: ${formData.selectedColorHex}, Favorite Place: ${formData.favoritePlace}. Create this image as an SVG.` },
+  //   ],
+  // });
+  const response = await openai.images.generate({
+    model: "gpt-image-2",
+    background: "transparent",
+    prompt: `Create an SVG that features a cute monster in the style of hololive, where the monster is inspired by the following information: Feeling: ${formData.feeling}, Color: ${formData.selectedColorHex}, Favorite Place: ${formData.favoritePlace}. Make sure you include ${formData.selectedColorHex} in the color scheme. Only illustrate the monster, no background or additional elements.`
+  });
+  const image_base64 = response.data[0].b64_json;
+  const mimeType = "image/png";
+  const dataUri = `data:${mimeType};base64,${image_base64}`
+
+  return dataUri || '';
+}
+
+const FeelingForm: React.FC<FeelingFormProps> = ({ setMonster }) => {
   const [feeling, setFeeling] = useState<string>('');
   const [selectedColor, setSelectedColor] = useState<string>('');
   const [favoritePlace, setFavoritePlace] = useState<string>('');
+  const [colors, setColors] = useState<NamedColor[]>([]);
 
   // Predefined colors with emotional/feeling associations - mix of bold and bright
   const colorPalette: NamedColor[] = [
@@ -59,16 +73,29 @@ const FeelingForm = () => {
     { name: "Burnt Orange", hex: "#f97316" }
   ];
 
-  // Generate 10 random colors with names
-  const colors: NamedColor[] = [];
-  const shuffledPalette = [...colorPalette].sort(() => Math.random() - 0.5);
-  for (let i = 0; i < 10 && i < shuffledPalette.length; i++) {
-    colors.push(shuffledPalette[i]);
-  }
+  // Generate 10 random colors on component mount
+  useEffect(() => {
+    const shuffledPalette = [...colorPalette].sort(() => Math.random() - 0.5);
+    const selectedColors: NamedColor[] = [];
+    for (let i = 0; i < 10 && i < shuffledPalette.length; i++) {
+      selectedColors.push(shuffledPalette[i]);
+    }
+    setColors(selectedColors);
+  }, []);
+
+  // Function to regenerate colors (can be called on form submit for fresh colors)
+  const regenerateColors = () => {
+    const shuffledPalette = [...colorPalette].sort(() => Math.random() - 0.5);
+    const selectedColors: NamedColor[] = [];
+    for (let i = 0; i < 10 && i < shuffledPalette.length; i++) {
+      selectedColors.push(shuffledPalette[i]);
+    }
+    setColors(selectedColors);
+  };
 
   const isFormValid = feeling.trim() && selectedColor && favoritePlace.trim();
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (isFormValid) {
       const selectedColorData = colors.find(color => color.hex === selectedColor);
@@ -79,12 +106,16 @@ const FeelingForm = () => {
         favoritePlace 
       };
 
-      console.log('Form submitted:', { 
-        feeling, 
-        selectedColor: selectedColorData ? `${selectedColorData.name} (${selectedColorData.hex})` : selectedColor,
-        favoritePlace 
-      });
-      // Handle form submission here
+      try {
+        const monsterContent = await generateMonster({ formData });
+        console.log(monsterContent)
+        setMonster(monsterContent);
+        // Generate new colors for next submission
+        regenerateColors();
+      } catch (error) {
+        console.error('Error generating monster:', error);
+        setMonster('');
+      }
     }
   };
 
@@ -144,7 +175,7 @@ const FeelingForm = () => {
 
       <div className={styles.formGroup}>
         <label htmlFor="favoritePlace" className={styles.formLabel}>
-          Write a sentence about your favorite place.
+          Write a sentence or two about your favorite place and why it's your favorite place.
         </label>
         <textarea
           id="favoritePlace"
