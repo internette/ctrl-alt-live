@@ -25,20 +25,15 @@ const openai = new OpenAI({
 });
 
 async function generateMonster({ formData }: { formData: FormData }): Promise<string> {
-  // const completion = await openai.chat.completions.create({
-  //   model: "gpt-3.5-turbo",
-  //   messages: [
-  //     { role: "user", content: `Generate a cute monster inspired by the following information and includes ${formData.selectedColorHex} in the color scheme: Feeling: ${formData.feeling}, Color: ${formData.selectedColorHex}, Favorite Place: ${formData.favoritePlace}. Create this image as an SVG.` },
-  //   ],
-  // });
   const response = await openai.images.generate({
-    model: "gpt-image-2",
+    model: "gpt-image-1.5",
     background: "transparent",
+    output_format: "png",
     prompt: `Create an SVG that features a cute monster in the style of hololive, where the monster is inspired by the following information: Feeling: ${formData.feeling}, Color: ${formData.selectedColorHex}, Favorite Place: ${formData.favoritePlace}. Make sure you include ${formData.selectedColorHex} in the color scheme. Only illustrate the monster, no background or additional elements.`
   });
   const image_base64 = response.data[0].b64_json;
   const mimeType = "image/png";
-  const dataUri = `data:${mimeType};base64,${image_base64}`
+  const dataUri = `data:${mimeType};base64,${image_base64}`;
 
   return dataUri || '';
 }
