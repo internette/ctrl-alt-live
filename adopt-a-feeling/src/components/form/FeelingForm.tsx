@@ -121,9 +121,9 @@ const FeelingForm: React.FC<FeelingFormProps> = ({ setMonster }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className={styles.feelingForm}>
+    <form onSubmit={handleSubmit} className={classnames(styles.feelingForm, styles.mulishFont, styles.mulishNormal)}>
       <div className={classnames(styles.formGroup)}>
-        <label htmlFor="feeling" className={styles.formLabel}>
+        <label htmlFor="feeling" className={classnames(styles.formLabel, styles.mulishFont, styles.mulishBold)}>
           How are you feeling today?
         </label>
         <input
@@ -136,7 +136,7 @@ const FeelingForm: React.FC<FeelingFormProps> = ({ setMonster }) => {
       </div>
 
       <div className={styles.formGroup}>
-        <label className={styles.formLabel}>
+        <label className={classnames(styles.formLabel, styles.mulishFont, styles.mulishBold)}>
           What color speaks to you the most?
         </label>
         <div className={styles.feelingGroup}>
@@ -163,8 +163,8 @@ const FeelingForm: React.FC<FeelingFormProps> = ({ setMonster }) => {
       </div>
 
       <div className={styles.formGroup}>
-        <label htmlFor="favoritePlace" className={styles.formLabel}>
-          Write a sentence or two about your favorite place and why it's your favorite place.
+        <label htmlFor="favoritePlace" className={classnames(styles.formLabel, styles.mulishFont, styles.mulishBold)}>
+          Write what your favorite place is and a sentence or two about why it's your favorite place.
         </label>
         <textarea
           id="favoritePlace"

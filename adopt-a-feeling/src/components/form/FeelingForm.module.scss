@@ -24,6 +24,20 @@ $quarter-spacing: 0.25rem;
   transition: background-color 0.2s;
 }
 
+.mulishFont {
+  font-family: "Mulish", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
+
+.mulishhNormal {
+  font-weight: 400;
+}
+
+.mulishBold {
+  font-weight: 700;
+}
+
 .feelingForm {
   max-width: 400px;
   width: 100%;
@@ -98,6 +112,7 @@ $quarter-spacing: 0.25rem;
 .formTextarea {
   @include form-field;
   resize: vertical;
+  width: 100%;
 }
 
 .submitButton {
