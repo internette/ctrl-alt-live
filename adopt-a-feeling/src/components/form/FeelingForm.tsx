@@ -124,7 +124,7 @@ const FeelingForm: React.FC<FeelingFormProps> = ({ setMonster }) => {
     <form onSubmit={handleSubmit} className={classnames(styles.feelingForm, styles.mulishFont, styles.mulishNormal)}>
       <div className={classnames(styles.formGroup)}>
         <label htmlFor="feeling" className={classnames(styles.formLabel, styles.mulishFont, styles.mulishBold)}>
-          How are you feeling today?
+          Describe how you're feeling today in a single word.
         </label>
         <input
           type="text"
