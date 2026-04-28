@@ -1,4 +1,4 @@
-import Main from './components/main/main';
+import MainContent from './components/MainContent/MainContent';
 import Header from './components/header/header';
 import './App.css'
 
@@ -6,7 +6,7 @@ function App() {
   return (
     <div className="App">
       <Header />
-      <Main />
+      <MainContent />
     </div>
   )
 }
